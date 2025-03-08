@@ -1,6 +1,6 @@
 # Inventory Management System
 
-An intuitive, scalable RESTful API-based inventory management system built with ASP.NET Core that handles product tracking, inventory operations, and reporting with a clean architecture approach.
+A RESTful API-based inventory management system built with ASP.NET Core that handles product tracking, inventory operations, and reporting with a clean architecture approach.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -96,7 +96,7 @@ The API implements RESTful principles with consistent resource naming and approp
 | POST   | /api/v1/products      | Create product               | Yes           | `{"name": "Office Chair", "description": "Ergonomic chair", "category": "Furniture", "unitPrice": 199.99, "quantityInStock": 25, "reorderLevel": 5}` |
 | GET    | /api/v1/products      | List all products            | Yes           | N/A |
 | GET    | /api/v1/products/{id} | Get product details          | Yes           | N/A |
-| PUT    | /api/v1/products/{id} | Update product               | Yes           | `{"name": "Deluxe Office Chair", "description": "Premium ergonomic chair", "category": "Furniture", "unitPrice": 249.99, "quantityInStock": 25, "reorderLevel": 5}` |
+| PUT    | /api/v1/products/{id} | Update product               | Yes           | `{"name": "Deluxe Office Chair", "description": "Premium ergonomic chair", "category": "Furniture", "unitPrice": 249.99,  "reorderLevel": 5}` |
 | DELETE | /api/v1/products/{id} | Remove product               | Yes           | N/A |
 
 ### Inventory Operations
@@ -130,23 +130,22 @@ The solution follows a clean architecture approach that emphasizes separation of
 - **InventoryManagement.Application**
   - Services
   - DTOs
-  - Validation
   - Interfaces
-  - Mapping profiles
+ 
   
 - **InventoryManagement.Domain**
   - Entities
   - Value objects
   - Domain services
   - Business rules and invariants
-  - Domain events (interfaces)
+  - Domain events 
   
 - **InventoryManagement.Infrastructure**
   - Data access (EF Core implementation)
   - External service integrations
   - Middleware components
   - Authentication handlers
-  - Logging implementation
+
   
 - **InventoryManagement.Tests**
   - Integration tests for API endpoints
@@ -165,8 +164,7 @@ The solution follows a clean architecture approach that emphasizes separation of
 
 - **Repository Pattern**: Abstracts data access logic, making the application more testable and maintainable
 - **Dependency Injection**: Promotes loose coupling between components
-- **Decorator Pattern**: Used for cross-cutting concerns like logging and caching
-- **Specification Pattern**: For flexible querying in repositories
+
 
 ### Database Design
 
@@ -174,7 +172,6 @@ The database uses a straightforward relational model with the following key tabl
 
 - **Products**: Stores product information
 - **InventoryTransactions**: Records all stock movements with transaction types
-- **Categories**: Product categorization
 - **Users**: Authentication and authorization
 
 Foreign key constraints and appropriate indexes have been implemented for data integrity and performance.
@@ -263,7 +260,6 @@ With additional time, I would enhance the system in the following ways:
    - Implement log levels appropriate for different environments
 
 9. **Additional Features**:
-   - Barcode/SKU support for products
    - Warehouse/location management for larger inventories
    - Batch/lot tracking for better inventory control
    - Implement bulk product import/export functionality
