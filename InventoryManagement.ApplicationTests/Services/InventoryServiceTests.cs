@@ -12,6 +12,8 @@ using InventoryManagement.Application.Services;
 using InventoryManagement.Domain.Common.Responses;
 using InventoryManagement.Domain.Entities;
 using InventoryManagement.Domain.Enums;
+using InventoryManagement.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -262,6 +264,69 @@ namespace InventoryManagement.ApplicationTests.Services
             _mockInventoryTransactionRepository.Verify(repo =>
                 repo.GetByProductIdAsync(productId), Times.Never);
         }
+
+        [Fact]
+public async Task WithdrawStockAsync_WhenWithdrawingMoreThanAvailable_ShouldThrowInvalidOperationException()
+{
+    // Arrange
+    int productId = 1;
+    var product = new Product("Test Product", "Description", "Category", 10.00m, 10, 5);
+    product.Id = productId;
+
+    var stockOperation = new StockOperationDto
+    {
+        ProductId = productId,
+        Quantity = 15, // Trying to withdraw more than total available
+        Notes = "Withdrawing more than available"
+    };
+
+    _mockProductRepository.Setup(repo => repo.GetByIdAsync(productId))
+        .ReturnsAsync(product);
+
+    // Act & Assert
+    await Assert.ThrowsAsync<BadRequestException>(() =>
+        _inventoryService.WithdrawStockAsync(stockOperation));
+
+    _mockProductRepository.Verify(repo => repo.GetByIdAsync(productId), Times.Once);
+    _mockInventoryTransactionRepository.Verify(repo =>
+        repo.AddAsync(It.IsAny<InventoryTransaction>()), Times.Never);
+    _mockProductRepository.Verify(repo =>
+        repo.UpdateAsync(It.IsAny<Product>()), Times.Never);
+}
+
+[Theory]
+[InlineData(0, "Adding zero stock")]
+[InlineData(-5, "Adding negative stock")]
+public async Task AddStockAsync_WhenQuantityIsZeroOrNegative_ShouldThrowBadRequestException(
+    int invalidQuantity, string notes)
+{
+    // Arrange
+    int productId = 1;
+    var product = new Product("Test Product", "Description", "Category", 10.00m, 10, 5);
+    product.Id = productId;
+
+    var stockOperation = new StockOperationDto
+    {
+        ProductId = productId,
+        Quantity = invalidQuantity,
+        Notes = notes
+    };
+
+    _mockProductRepository.Setup(repo => repo.GetByIdAsync(productId))
+        .ReturnsAsync(product);
+
+    // Act & Assert
+    await Assert.ThrowsAsync<DomainException>(() =>
+        _inventoryService.AddStockAsync(stockOperation));
+
+    _mockProductRepository.Verify(repo => repo.GetByIdAsync(productId), Times.Once);
+    _mockInventoryTransactionRepository.Verify(repo =>
+        repo.AddAsync(It.IsAny<InventoryTransaction>()), Times.Never);
+    _mockProductRepository.Verify(repo =>
+        repo.UpdateAsync(It.IsAny<Product>()), Times.Never);
+}
+
+
 
     }
 }
