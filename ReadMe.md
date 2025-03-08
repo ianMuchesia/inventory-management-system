@@ -33,7 +33,7 @@ Before diving in, make sure you have the following tools installed:
    ```
 
 2. Set up the database:
-   - Find `InventoryManagementSQL.sql` in the root directory
+   - Find `InventoryManagementSQL` in the root directory
    - Execute the script in your SQL Server environment
    - The database will be created as `InventoryDB`
 
