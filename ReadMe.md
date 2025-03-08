@@ -28,14 +28,14 @@ Before diving in, make sure you have the following tools installed:
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/inventory-management-system.git
+   git clone https://github.com/ianMuchesia/inventory-management-system.git
    cd inventory-management-system
    ```
 
 2. Set up the database:
    - Find `InventoryManagementSQL.sql` in the root directory
    - Execute the script in your SQL Server environment
-   - The database will be created as `inventoryDB`
+   - The database will be created as `InventoryDB`
 
 3. Configure JWT authentication:
    Generate a secure key using:
